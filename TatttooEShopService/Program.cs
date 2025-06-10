@@ -5,9 +5,11 @@ using TattooEShopDomain.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlServer(connectionString), ServiceLifetime.Transient);
 
 
-builder.Services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("TestDb"), ServiceLifetime.Transient);
 builder.Services.AddScoped<IRepository, Repository>();
 
 
@@ -39,8 +41,12 @@ app.UseAuthorization();
 app.MapControllers();
 
 
-var scope = app.Services.CreateScope();
-var seeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
-await seeder.Seed();
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+    await db.Database.MigrateAsync();
+    var seeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
+    await seeder.Seed();
+}
 
 app.Run();

@@ -1,0 +1,4 @@
+CREATE DATABASE TattooEShopDB;
+GO
+USE TattooEShopDB;
+GO

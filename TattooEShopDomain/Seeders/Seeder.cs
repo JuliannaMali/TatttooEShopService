@@ -7,6 +7,18 @@ public class Seeder (DataContext context) : ISeeder
 {
     public async Task Seed()
     {
+        if (!context.Categories.Any())
+        {
+            var categories = new List<Category>
+                {
+                    new Category { Id = 1, Name = "Ink" },
+                    new Category { Id = 2, Name = "Cartridges" },
+                    new Category { Id = 3, Name = "Practice Materials" },
+                };
+
+            context.Categories.AddRange(categories);
+            context.SaveChanges();
+        }
         if (!context.Products.Any())
         {
             var products = new List<Product>
