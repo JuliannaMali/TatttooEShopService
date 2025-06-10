@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TattooEShopApplication.Services;
+using TattooEShopDomain.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,35 +10,60 @@ namespace TatttooEShopService.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private IProductService _productService;
+        public ProductController(IProductService productService)
         {
-            return new string[] { "value1", "value2" };
+            _productService = productService;
+        }
+
+        // GET: api/<ProductController>
+        [HttpGet]
+        public async Task<ActionResult> Get()
+        {
+            var result = await _productService.GetAllAsync();
+            return Ok(result);
         }
 
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
-            return "value";
+            var result = await _productService.GetAsync(id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
         }
 
         // POST api/<ProductController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] Product product)
         {
+            var result = await _productService.Add(product);
+
+            return Ok(result);
         }
 
         // PUT api/<ProductController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(int id, [FromBody] Product product)
         {
+            var result = await _productService.Update(product);
+
+            return Ok(result);
         }
 
         // DELETE api/<ProductController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            var product = await _productService.GetAsync(id);
+            product.Deleted = true;
+            var result = await _productService.Update(product);
+
+            return Ok(result);
         }
     }
 }
