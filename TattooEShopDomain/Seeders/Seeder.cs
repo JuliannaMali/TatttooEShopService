@@ -11,9 +11,9 @@ public class Seeder (DataContext context) : ISeeder
         {
             var categories = new List<Category>
                 {
-                    new Category { Id = 1, Name = "Ink" },
-                    new Category { Id = 2, Name = "Cartridges" },
-                    new Category { Id = 3, Name = "Practice Materials" },
+                    new Category { Name = "Ink" },
+                    new Category { Name = "Cartridges" },
+                    new Category { Name = "Practice Materials" },
                 };
 
             context.Categories.AddRange(categories);
@@ -21,13 +21,37 @@ public class Seeder (DataContext context) : ISeeder
         }
         if (!context.Products.Any())
         {
-            var products = new List<Product>
-                {
-                    new Product { Id = 1, Name = "RL - 0.30mm - LT - Mast Pro Cartridge", Ean = "194675", Price = 5.90m, Stock = 50, Sku = "RLLTMPC"},
-                    new Product { Id = 2, Name = "Radiant Geneva Real Black - tattoo ink", Ean = "146701", Price = 89, Stock = 10, Sku = "RGRBTI"},
-                    new Product { Id = 3, Name = "Silikonowa skóra do ćwiczeń", Ean = "126489", Price = 24.90m, Stock = 5, Sku = "SSDC"},
-                };
+            var ink = context.Categories.First(c => c.Name == "Ink");
+            var cartridges = context.Categories.First(c => c.Name == "Cartridges");
+            var practice = context.Categories.First(c => c.Name == "Practice Materials");
 
+            var products = new List<Product>
+            {
+                new Product {
+                    Name = "RL - 0.30mm - LT - Mast Pro Cartridge",
+                    Ean = "194675",
+                    Price = 5.90m,
+                    Stock = 50,
+                    Sku = "RLLTMPC",
+                    CategoryId = cartridges.Id
+                },
+                new Product {
+                    Name = "Radiant Geneva Real Black - tattoo ink",
+                    Ean = "146701",
+                    Price = 89,
+                    Stock = 10,
+                    Sku = "RGRBTI",
+                    CategoryId = ink.Id
+                },
+                new Product {
+                    Name = "Silikonowa skóra do ćwiczeń",
+                    Ean = "126489",
+                    Price = 24.90m,
+                    Stock = 5,
+                    Sku = "SSDC",
+                    CategoryId = practice.Id
+                },
+            };
             context.Products.AddRange(products);
             context.SaveChanges();
         }
