@@ -1,13 +1,19 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
+using System.Security.Cryptography;
 using UserApplication.Services.JWT;
 using UserApplication.Services.Login;
 using UserDomain.Models;
 
 
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddDbContext<TattooEShopDomain.Repository.DbContext>(x => x.UseInMemoryDatabase("TestDb"), ServiceLifetime.Transient);
 
 // JWT config
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -21,6 +27,10 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    var rsa = RSA.Create();
+    rsa.ImportFromPem(File.ReadAllText("../data/public.key"));// Za³aduj klucz publiczny RSA
+    var publicKey = new RsaSecurityKey(rsa);
+
     var jwtConfig = jwtSettings.Get<JwtSettings>();
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -30,7 +40,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtConfig.Issuer,
         ValidAudience = jwtConfig.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Key))
+        IssuerSigningKey = publicKey
     };
 });
 

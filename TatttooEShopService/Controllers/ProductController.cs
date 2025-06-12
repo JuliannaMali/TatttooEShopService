@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TattooEShopApplication.Services;
 using TattooEShopDomain.Models;
 
@@ -38,6 +39,7 @@ namespace TatttooEShopService.Controllers
         }
 
         // POST api/<ProductController>
+        [Authorize(Policy = "EmployeeOnly")]
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] Product product)
         {
@@ -47,6 +49,7 @@ namespace TatttooEShopService.Controllers
         }
 
         // PUT api/<ProductController>/5
+        [Authorize(Policy = "EmployeeOnly")]
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] Product product)
         {
@@ -56,6 +59,7 @@ namespace TatttooEShopService.Controllers
         }
 
         // DELETE api/<ProductController>/5
+        [Authorize(Policy = "EmployeeOnly")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
