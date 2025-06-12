@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36202.13 d17.14
+VisualStudioVersion = 17.14.36202.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TattooEShopService", "TatttooEShopService\TattooEShopService.csproj", "{A1898881-9E48-4AE3-9CE6-9026E4542550}"
 EndProject
@@ -12,6 +12,14 @@ EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TattooEShop", "TattooEShop", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "User", "User", "{E85DD169-5563-4A3E-A051-13CAC3FC34EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService.csproj", "{245DCEE1-1A0A-419D-A25C-0534081A3CF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserDomain", "UserDomain\UserDomain.csproj", "{E8355815-1E43-40DC-BF2A-228EC3785561}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserApplication", "UserApplication\UserApplication.csproj", "{CF958727-F6E7-4598-9559-E0E791607083}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +43,18 @@ Global
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{245DCEE1-1A0A-419D-A25C-0534081A3CF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{245DCEE1-1A0A-419D-A25C-0534081A3CF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{245DCEE1-1A0A-419D-A25C-0534081A3CF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{245DCEE1-1A0A-419D-A25C-0534081A3CF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8355815-1E43-40DC-BF2A-228EC3785561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8355815-1E43-40DC-BF2A-228EC3785561}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8355815-1E43-40DC-BF2A-228EC3785561}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8355815-1E43-40DC-BF2A-228EC3785561}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF958727-F6E7-4598-9559-E0E791607083}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF958727-F6E7-4598-9559-E0E791607083}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF958727-F6E7-4598-9559-E0E791607083}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF958727-F6E7-4598-9559-E0E791607083}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,6 +63,9 @@ Global
 		{A1898881-9E48-4AE3-9CE6-9026E4542550} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{C30563BE-E4EC-4D0F-99F4-516773532139} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{271A8D15-06FD-4E7D-8467-6CE32F0BC640} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{245DCEE1-1A0A-419D-A25C-0534081A3CF9} = {E85DD169-5563-4A3E-A051-13CAC3FC34EA}
+		{E8355815-1E43-40DC-BF2A-228EC3785561} = {E85DD169-5563-4A3E-A051-13CAC3FC34EA}
+		{CF958727-F6E7-4598-9559-E0E791607083} = {E85DD169-5563-4A3E-A051-13CAC3FC34EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {83D609C7-F284-4FF6-8096-D9C6C77DA26C}
