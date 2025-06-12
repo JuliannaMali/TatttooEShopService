@@ -66,8 +66,11 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    var rsa = RSA.Create();
-    rsa.ImportFromPem(File.ReadAllText("../data/public.key"));
+    string publicKeyPath = "/app/data/public.key";
+
+    using RSA rsa = RSA.Create();
+    rsa.ImportFromPem(File.ReadAllText(publicKeyPath));
+
     var publicKey = new RsaSecurityKey(rsa);
 
     options.TokenValidationParameters = new TokenValidationParameters

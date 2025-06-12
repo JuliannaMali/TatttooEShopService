@@ -22,4 +22,14 @@
     <ProjectReference Include="..\UserDomain\UserDomain.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<None Update="..\data\public.key">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>data\public.key</Link>
+		</None>
+		<None Update="..\data\private.key">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>data\private.key</Link>
+		</None>
+    </ItemGroup>
 </Project>

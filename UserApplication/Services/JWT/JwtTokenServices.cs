@@ -29,8 +29,11 @@ public class JwtTokenService : IJwtTokenService
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key));
 
-        var rsa = RSA.Create();
-        rsa.ImportFromPem(File.ReadAllText("../data/private.key")); // Załaduj klucz prywatny RSA
+        string privateKeyPath = "/app/data/private.key";
+
+        using RSA rsa = RSA.Create();
+        rsa.ImportFromPem(File.ReadAllText(privateKeyPath));
+
         var creds = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256);
 
    
