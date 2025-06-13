@@ -40,6 +40,7 @@ namespace TatttooEShopService.Controllers
 
         // POST api/<ProductController>
         [Authorize(Policy = "EmployeeOnly")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] Product product)
         {
@@ -50,6 +51,7 @@ namespace TatttooEShopService.Controllers
 
         // PUT api/<ProductController>/5
         [Authorize(Policy = "EmployeeOnly")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] Product product)
         {
@@ -60,6 +62,7 @@ namespace TatttooEShopService.Controllers
 
         // DELETE api/<ProductController>/5
         [Authorize(Policy = "EmployeeOnly")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {

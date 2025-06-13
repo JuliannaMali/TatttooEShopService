@@ -6,14 +6,17 @@ using System.Security.Cryptography;
 using UserApplication.Services.JWT;
 using UserApplication.Services.Login;
 using UserDomain.Models;
+using UserDomain.Profiles;
 
 
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-builder.Services.AddDbContext<TattooEShopDomain.Repository.DbContext>(x => x.UseInMemoryDatabase("TestDb"), ServiceLifetime.Transient);
+var connectionString = builder.Configuration.GetConnectionString("TattooDB");
+//var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+builder.Services.AddDbContext<TattooEShopDomain.Repository.DbContext>(options =>
+    options.UseSqlServer(connectionString), ServiceLifetime.Transient);
 
 // JWT config
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -55,6 +58,9 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
