@@ -6,7 +6,7 @@ namespace UserDomain.Models.Entities;
 public class User
 {
     [Key]
-    public int Id { get; set; }
+    public int UserId { get; set; }
 
     [Required]
     [MaxLength(100)]
@@ -18,8 +18,6 @@ public class User
 
     [Required]
     public string PasswordHash { get; set; }
-
-    public ICollection<Role> Roles { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

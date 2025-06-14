@@ -1,5 +1,5 @@
 ﻿
-namespace UserDomain.Models.Response;
+namespace UserDomain.Models.DTO;
 
 public class UserResponseDTO
 {

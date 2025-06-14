@@ -2,6 +2,8 @@
 using System.Security.Cryptography;
 using UserApplication.Services.JWT;
 using UserDomain.Exceptions;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace UserApplication.Services.Login;
 
@@ -10,12 +12,14 @@ public class LoginService : ILoginService
     protected IJwtTokenService _jwtTokenService;
     private readonly TattooEShopDomain.Repository.DbContext _dbContext;
 
-    public LoginService(IJwtTokenService jwtTokenService)
+    public LoginService(IJwtTokenService jwtTokenService, TattooEShopDomain.Repository.DbContext context)
     {
         _jwtTokenService = jwtTokenService;
+        _dbContext = context;
     }
 
-    public string Login(string username, string password)
+
+    public async Task<string> Login(string username, string password)
     {
 
         string hash = BitConverter.ToString(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(password))).Replace("-", "").ToLower();
@@ -23,25 +27,39 @@ public class LoginService : ILoginService
         var user = _dbContext.Users.FirstOrDefault(u => u.Username == username && u.PasswordHash == hash);
 
 
-        //if (user == null)
-        //{
-        //    throw new InvalidCredentialsException();
-        //}
-        //else
-        //{
-        //    if (user.Roles.Contains(new UserDomain.Models.Entities.Role()))
-        //}
-
-        if (username == "admin" && password == "password")
-        {
-            var roles = new List<string> { "Client", "Employee", "Administrator" };
-            var token = _jwtTokenService.GenerateToken(123, roles);
-            return token;
-        }
-        else
+        if (user == null)
         {
             throw new InvalidCredentialsException();
         }
+        else
+        {
+
+            var roleList = await _dbContext.Roles.Where(r => r.UserId == user.UserId).Select(r => r.Name).ToListAsync();
+            var roles = new List<string> { "Client" };
+
+            if (roleList.Contains("Employee"))
+                roles.Add("Employee");
+
+            if (roleList.Contains("Administrator"))
+                roles.Add("Administrator");
+
+
+
+            var token = _jwtTokenService.GenerateToken(user.UserId, roles);
+            return token;
+
+        }
+
+        //if (username == "admin" && password == "password")
+        //{
+        //    var roles = new List<string> { "Client", "Employee", "Administrator" };
+        //    var token = _jwtTokenService.GenerateToken(123, roles);
+        //    return token;
+        //}
+        //else
+        //{
+        //    throw new InvalidCredentialsException();
+        //}
 
     }
 }

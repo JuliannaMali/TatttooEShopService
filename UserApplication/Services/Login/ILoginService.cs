@@ -2,5 +2,5 @@
 
 public interface ILoginService
 {
-    string Login(string username, string password);
+    Task<string> Login(string username, string password);
 }

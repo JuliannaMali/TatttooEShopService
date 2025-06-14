@@ -5,8 +5,11 @@ using Microsoft.OpenApi.Models;
 using System.Security.Cryptography;
 using UserApplication.Services.JWT;
 using UserApplication.Services.Login;
+using UserApplication.Services.User;
 using UserDomain.Models;
 using UserDomain.Profiles;
+using UserDomain.Repository;
+using UserDomain.Seeders;
 
 
 
@@ -17,6 +20,14 @@ var connectionString = builder.Configuration.GetConnectionString("TattooDB");
 //var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 builder.Services.AddDbContext<TattooEShopDomain.Repository.DbContext>(options =>
     options.UseSqlServer(connectionString), ServiceLifetime.Transient);
+
+
+
+builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IUserService, UserApplication.Services.User.UserService>();
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<ISeeder, Seeder>();
 
 // JWT config
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -54,10 +65,12 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy =>
         policy.RequireRole("Administrator"));
+    options.AddPolicy("EmployeeOnly", policy =>
+        policy.RequireRole("Employee"));
+
+
 });
 
-builder.Services.AddScoped<ILoginService, LoginService>();
-builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -114,5 +127,14 @@ app.UseAuthorization();
 
 
 app.MapControllers();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<TattooEShopDomain.Repository.DbContext>();
+    //await db.Database.MigrateAsync();
+    var seeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
+    await seeder.Seed();
+}
 
 app.Run();
