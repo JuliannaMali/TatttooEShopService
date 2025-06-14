@@ -45,7 +45,7 @@ namespace UserDomain.Migrations
                         name: "FK_Roles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateIndex(
