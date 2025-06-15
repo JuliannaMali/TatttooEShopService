@@ -132,7 +132,7 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<UserDomain.Repository.DbContext>();
-    //await db.Database.MigrateAsync();
+    await db.Database.MigrateAsync();
     var seeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
     await seeder.Seed();
 }
