@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UserDomain.Models.Entities;
 
-namespace TattooEShopDomain.Repository;
+namespace UserDomain.Repository;
 
 public class DbContext : Microsoft.EntityFrameworkCore.DbContext
 {

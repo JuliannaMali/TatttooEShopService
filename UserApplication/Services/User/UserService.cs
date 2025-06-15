@@ -9,11 +9,11 @@ public class UserService : IUserService
 {
     private readonly IMapper _mapper;
 
-    private readonly TattooEShopDomain.Repository.DbContext context;
+    private readonly UserDomain.Repository.DbContext context;
 
     private IRepository _repository;
 
-    public UserService(IMapper mapper, TattooEShopDomain.Repository.DbContext dbContext, IRepository repository)
+    public UserService(IMapper mapper, UserDomain.Repository.DbContext dbContext, IRepository repository)
     {
         _mapper = mapper;
         context = dbContext;

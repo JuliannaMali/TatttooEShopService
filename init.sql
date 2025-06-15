@@ -1,4 +1,9 @@
 CREATE DATABASE TattooEShopDB;
-GO
+CREATE DATABASE TattooUserDB
+
+
 USE TattooEShopDB;
+GO
+
+USE TattooUserDB
 GO

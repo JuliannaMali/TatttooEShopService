@@ -10,10 +10,10 @@ namespace UserApplication.Services.Login;
 public class LoginService : ILoginService
 {
     protected IJwtTokenService _jwtTokenService;
-    private readonly TattooEShopDomain.Repository.DbContext _dbContext;
+    private readonly UserDomain.Repository.DbContext _dbContext;
 
-    public LoginService(IJwtTokenService jwtTokenService, TattooEShopDomain.Repository.DbContext context)
-    {
+    public LoginService(IJwtTokenService jwtTokenService, UserDomain.Repository.DbContext context)
+    {   
         _jwtTokenService = jwtTokenService;
         _dbContext = context;
     }

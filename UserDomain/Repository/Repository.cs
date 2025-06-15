@@ -6,9 +6,9 @@ namespace UserDomain.Repository;
 
 public class Repository : IRepository
 {
-    private readonly TattooEShopDomain.Repository.DbContext _dbContext;
+    private readonly UserDomain.Repository.DbContext _dbContext;
 
-    public Repository(TattooEShopDomain.Repository.DbContext datacontext)
+    public Repository(UserDomain.Repository.DbContext datacontext)
     {
         _dbContext = datacontext;
     }

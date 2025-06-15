@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 using UserDomain.Models.Entities;
 
 namespace UserDomain.Seeders;
 
-public class Seeder (TattooEShopDomain.Repository.DbContext context) : ISeeder
+public class Seeder (Repository.DbContext context) : ISeeder
 {
     public async Task Seed()
     {

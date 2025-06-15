@@ -7,7 +7,7 @@ services:
     depends_on:
         - db
     environment:
-        - CONNECTION_STRING=Server=${DB_HOST};Database=${DB_NAME};User Id=${DB_USER};Password=${SA_PASSWORD};Encrypt=False;TrustServerCertificate=True;
+        - CONNECTION_STRING=Server=${DB_HOST};Database=${DB_ESHOP};User Id=${DB_USER};Password=${SA_PASSWORD};Encrypt=False;TrustServerCertificate=True;
     ports:
         - "5000:5000"
 
@@ -16,7 +16,7 @@ services:
     depends_on:
       - db
     environment:
-      - CONNECTION_STRING=Server=${DB_HOST};Database=${DB_NAME};User Id=${DB_USER};Password=${SA_PASSWORD};Encrypt=False;TrustServerCertificate=True;
+      - CONNECTION_STRING=Server=${DB_HOST};Database=${DB_USER};User Id=${DB_USER};Password=${SA_PASSWORD};Encrypt=False;TrustServerCertificate=True;
     build:
       context: .
       dockerfile: UserService/Dockerfile

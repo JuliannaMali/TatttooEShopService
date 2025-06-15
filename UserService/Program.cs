@@ -18,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("TattooDB");
 //var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
-builder.Services.AddDbContext<TattooEShopDomain.Repository.DbContext>(options =>
+builder.Services.AddDbContext<UserDomain.Repository.DbContext>(options =>
     options.UseSqlServer(connectionString), ServiceLifetime.Transient);
 
 
@@ -131,7 +131,7 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<TattooEShopDomain.Repository.DbContext>();
+    var db = scope.ServiceProvider.GetRequiredService<UserDomain.Repository.DbContext>();
     //await db.Database.MigrateAsync();
     var seeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
     await seeder.Seed();

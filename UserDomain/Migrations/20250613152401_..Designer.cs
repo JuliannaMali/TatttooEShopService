@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TattooEShopDomain.Repository;
+using UserDomain.Repository;
 
 #nullable disable
 
 namespace UserDomain.Migrations
 {
-    [DbContext(typeof(TattooEShopDomain.Repository.DbContext))]
+    [DbContext(typeof(UserDomain.Repository.DbContext))]
     [Migration("20250613152401_.")]
     partial class _
     {
