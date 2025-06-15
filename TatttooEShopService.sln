@@ -27,6 +27,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{717B8F28-2
 		data\public.key = data\public.key
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notification", "Notification", "{F4E89297-EEF4-4958-8779-83FEB9BC788A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService", "NotificationService\NotificationService.csproj", "{763EBCC7-EE25-4F26-8DCF-EAAD738758AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +65,10 @@ Global
 		{CF958727-F6E7-4598-9559-E0E791607083}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF958727-F6E7-4598-9559-E0E791607083}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF958727-F6E7-4598-9559-E0E791607083}.Release|Any CPU.Build.0 = Release|Any CPU
+		{763EBCC7-EE25-4F26-8DCF-EAAD738758AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{763EBCC7-EE25-4F26-8DCF-EAAD738758AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{763EBCC7-EE25-4F26-8DCF-EAAD738758AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{763EBCC7-EE25-4F26-8DCF-EAAD738758AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,6 +80,7 @@ Global
 		{245DCEE1-1A0A-419D-A25C-0534081A3CF9} = {E85DD169-5563-4A3E-A051-13CAC3FC34EA}
 		{E8355815-1E43-40DC-BF2A-228EC3785561} = {E85DD169-5563-4A3E-A051-13CAC3FC34EA}
 		{CF958727-F6E7-4598-9559-E0E791607083} = {E85DD169-5563-4A3E-A051-13CAC3FC34EA}
+		{763EBCC7-EE25-4F26-8DCF-EAAD738758AD} = {F4E89297-EEF4-4958-8779-83FEB9BC788A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {83D609C7-F284-4FF6-8096-D9C6C77DA26C}

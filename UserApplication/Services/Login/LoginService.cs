@@ -2,8 +2,8 @@
 using System.Security.Cryptography;
 using UserApplication.Services.JWT;
 using UserDomain.Exceptions;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using UserApplication.Producer;
 
 namespace UserApplication.Services.Login;
 
@@ -11,14 +11,15 @@ public class LoginService : ILoginService
 {
     protected IJwtTokenService _jwtTokenService;
     private readonly UserDomain.Repository.DbContext _dbContext;
+    protected IKafkaProducer _kafkaProducer;
 
-    public LoginService(IJwtTokenService jwtTokenService, UserDomain.Repository.DbContext context)
-    {   
+
+    public LoginService(IJwtTokenService jwtTokenService, UserDomain.Repository.DbContext context, IKafkaProducer kafkaProducer)
+    {
         _jwtTokenService = jwtTokenService;
         _dbContext = context;
+        _kafkaProducer = kafkaProducer;
     }
-
-
     public async Task<string> Login(string username, string password)
     {
 
@@ -46,20 +47,9 @@ public class LoginService : ILoginService
 
 
             var token = _jwtTokenService.GenerateToken(user.UserId, roles);
+            await _kafkaProducer.SendMessageAsync("after-login-email-topic", user.Email.ToString());
+
             return token;
-
         }
-
-        //if (username == "admin" && password == "password")
-        //{
-        //    var roles = new List<string> { "Client", "Employee", "Administrator" };
-        //    var token = _jwtTokenService.GenerateToken(123, roles);
-        //    return token;
-        //}
-        //else
-        //{
-        //    throw new InvalidCredentialsException();
-        //}
-
     }
 }

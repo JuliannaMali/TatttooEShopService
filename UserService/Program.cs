@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Cryptography;
+using UserApplication.Producer;
 using UserApplication.Services.JWT;
 using UserApplication.Services.Login;
 using UserApplication.Services.User;
@@ -23,11 +24,17 @@ builder.Services.AddDbContext<UserDomain.Repository.DbContext>(options =>
 
 
 
+
+
+
+
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IUserService, UserApplication.Services.User.UserService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<ISeeder, Seeder>();
+builder.Services.AddScoped<IKafkaProducer, KafkaProducer>();
+
 
 // JWT config
 var jwtSettings = builder.Configuration.GetSection("Jwt");
