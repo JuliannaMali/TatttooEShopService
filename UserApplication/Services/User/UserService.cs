@@ -47,16 +47,16 @@ public class UserService : IUserService
         return result;
     }
 
-    public async Task<UserDomain.Models.Entities.User> Update(int userId)
+    public async Task<UserDomain.Models.Entities.User> Update(int userId, UserUpdateDTO userDto)
     {
-        var user = context.Users.Find(userId);
-
-        var userDto = new UserUpdateDTO
-        {
-            Email = user.Email,
-            PasswordHash = user.PasswordHash,
-        };
-        var result = await _repository.UpdateAsync(userDto);
+        //var user = context.Users.Find(userId);
+        
+        //userDto = new UserUpdateDTO
+        //{
+        //    Email = user.Email,
+        //    PasswordHash = user.PasswordHash,
+        //};
+        var result = await _repository.UpdateAsync(userId, userDto);
         return result;
     }
     public async Task<UserDomain.Models.Entities.User> Delete(int userId)

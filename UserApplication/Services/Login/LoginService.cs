@@ -47,6 +47,10 @@ public class LoginService : ILoginService
 
 
             var token = _jwtTokenService.GenerateToken(user.UserId, roles);
+
+            user.LastLoginAt = DateTime.Now;
+            await _dbContext.SaveChangesAsync();
+
             await _kafkaProducer.SendMessageAsync("after-login-email-topic", user.Email.ToString());
 
             return token;

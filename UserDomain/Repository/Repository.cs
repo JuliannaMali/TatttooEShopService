@@ -20,7 +20,7 @@ public class Repository : IRepository
         {
             Username = userDto.Username,
             Email = userDto.Email,
-            PasswordHash = BitConverter.ToString(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(userDto.PasswordHash))).Replace("-", "").ToLower()
+            PasswordHash = BitConverter.ToString(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(userDto.Password))).Replace("-", "").ToLower()
 
         };
 
@@ -38,7 +38,7 @@ public class Repository : IRepository
         {
             Username = userDto.Username,
             Email = userDto.Email,
-            PasswordHash = BitConverter.ToString(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(userDto.PasswordHash))).Replace("-", "").ToLower()
+            PasswordHash = BitConverter.ToString(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(userDto.Password))).Replace("-", "").ToLower()
         };
 
         _dbContext.Users.Add(user);
@@ -56,7 +56,7 @@ public class Repository : IRepository
         {
             Username = userDto.Username,
             Email = userDto.Email,
-            PasswordHash = BitConverter.ToString(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(userDto.PasswordHash))).Replace("-", "").ToLower()
+            PasswordHash = BitConverter.ToString(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(userDto.Password))).Replace("-", "").ToLower()
         };
 
         _dbContext.Users.Add(user);
@@ -70,13 +70,16 @@ public class Repository : IRepository
         return user;
     }
 
-    public async Task<Models.Entities.User> UpdateAsync(UserUpdateDTO userDto)
+    public async Task<Models.Entities.User> UpdateAsync(int userId, UserUpdateDTO userDto)
     {
-        var user = new Models.Entities.User
-        {
-            Email = userDto.Email,
-            PasswordHash = BitConverter.ToString(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(userDto.PasswordHash))).Replace("-", "").ToLower()
-        };
+        var newemail = userDto.Email;
+        var newpassword = BitConverter.ToString(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(userDto.Password))).Replace("-", "").ToLower();
+
+        var user = _dbContext.Users.Find(userId);
+
+        user.Email = newemail;
+        user.PasswordHash = newpassword;
+         
         await _dbContext.SaveChangesAsync();
         return user;
     }

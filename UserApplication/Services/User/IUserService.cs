@@ -11,7 +11,7 @@ public interface IUserService
     Task<UserDomain.Models.Entities.User> AddEmployee(UserCreateDTO user);
     Task<UserDomain.Models.Entities.User> AddAdmin(UserCreateDTO user);
 
-    Task<UserDomain.Models.Entities.User> Update(int userId);
+    Task<UserDomain.Models.Entities.User> Update(int userId, UserUpdateDTO user);
 
     Task<UserDomain.Models.Entities.User> Delete(int userId);
 }
