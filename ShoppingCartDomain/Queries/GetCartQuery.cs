@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using ShoppingCartDomain.Models;
 
 namespace ShoppingCartDomain.Queries;
-
-public class GetCartQuery
+public class GetCartQuery : IRequest<Cart>
 {
+    public int CartId { get; set; }
 }

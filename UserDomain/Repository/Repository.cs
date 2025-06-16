@@ -21,7 +21,6 @@ public class Repository : IRepository
             Username = userDto.Username,
             Email = userDto.Email,
             PasswordHash = BitConverter.ToString(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(userDto.Password))).Replace("-", "").ToLower()
-
         };
 
         _dbContext.Users.Add(user);

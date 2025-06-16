@@ -1,4 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ShoppingCartDomain.Commands;
+using MediatR;
+using ShoppingCartDomain.Queries;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using UserDomain.Models.Entities;
+using ShoppingCartInfrastructure.Kafka;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,35 +16,61 @@ namespace ShoppingCartService.Controllers;
 [ApiController]
 public class CartController : ControllerBase
 {
-    // GET: api/<CartController>
+    private readonly IMediator _mediator;
+    private readonly UserDomain.Repository.DbContext _dbcontext;
+    protected IKafkaProducer _kafkaProducer;
+    public CartController(IMediator mediator, UserDomain.Repository.DbContext context, IKafkaProducer kafkaProducer)
+    {
+        _mediator = mediator;
+        _dbcontext = context;
+        _kafkaProducer = kafkaProducer;
+    }
+
+    [HttpPost("add-product")]
+    public async Task<IActionResult> AddProductToCart([FromBody] AddProductToCartCommand command)
+    {
+        await _mediator.Send(command);
+        return Ok();
+    }
+
+    [HttpPost("remove-product")]
+    public async Task<IActionResult> RemoveProductFromCart([FromBody] RemoveProductFromCartCommand command)
+    {
+        await _mediator.Send(command);
+        return Ok();
+    }
+
+    [HttpGet("{cartId}")]
+    public async Task<IActionResult> GetCart(int cartId)
+    {
+        var query = new GetCartQuery { CartId = cartId };
+        var result = await _mediator.Send(query);
+        return result == null ? NotFound() : Ok(result);
+    }
+
     [HttpGet]
-    public IEnumerable<string> Get()
+    public async Task<IActionResult> GetAllCarts()
     {
-        return new string[] { "value1", "value2" };
+        var query = new GetAllCartsQuery();
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
 
-    // GET api/<CartController>/5
-    [HttpGet("{id}")]
-    public string Get(int id)
+    [Authorize]
+    [HttpPost("checkout")]
+    public async Task<IActionResult> Checkout()
     {
-        return "value";
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+        var user = _dbcontext.Users.Find(userId);
+        var command = new CheckoutCommand { CartId = userId }; // zakładamy CartId = UserId
+
+        if (user == null)
+            return NotFound("User not found");
+
+        await _kafkaProducer.SendMessageAsync("checkout-topic", user.Email.ToString()); 
+
+        await _mediator.Send(command);
+        return Ok("Checkout complete");
     }
 
-    // POST api/<CartController>
-    [HttpPost]
-    public void Post([FromBody] string value)
-    {
-    }
-
-    // PUT api/<CartController>/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
-    {
-    }
-
-    // DELETE api/<CartController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
-    }
 }

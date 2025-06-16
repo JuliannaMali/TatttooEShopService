@@ -73,6 +73,8 @@ builder.Services.AddAuthentication(options =>
 
     var publicKey = new RsaSecurityKey(rsa);
 
+
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,

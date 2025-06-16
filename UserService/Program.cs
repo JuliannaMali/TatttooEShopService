@@ -55,7 +55,10 @@ builder.Services.AddAuthentication(options =>
 
     var publicKey = new RsaSecurityKey(rsa);
 
-    var jwtConfig = jwtSettings.Get<JwtSettings>();
+    var jwtSection = builder.Configuration.GetSection("Jwt");
+    var jwtConfig = jwtSection.Get<JwtSettings>();
+
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,

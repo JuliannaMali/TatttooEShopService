@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ShoppingCartDomain.Models;
 
 namespace ShoppingCartDomain.Interfaces;
-
 public interface ICartReader
 {
+    Cart GetCart(int cartId);
+    List<Cart> GetAllCarts();
 }

@@ -21,6 +21,17 @@ services:
       context: .
       dockerfile: UserService/Dockerfile
 
+  shoppingcartservice:
+    image: ${DOCKER_REGISTRY-}shoppingcartservice
+    depends_on:
+      - db
+      - kafka
+    environment:
+      - CONNECTION_STRING=Server=${DB_HOST};Database=${DB_USERS};User Id=${DB_USER};Password=${SA_PASSWORD};Encrypt=False;TrustServerCertificate=True;,
+    build:
+      context: .
+      dockerfile: ShoppingCartService/Dockerfile
+
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:

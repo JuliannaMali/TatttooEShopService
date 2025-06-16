@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ShoppingCartDomain.Interfaces;
-
+﻿namespace ShoppingCartDomain.Interfaces;
 public interface ICartRemover
 {
+    void RemoveProductFromCart(int cartId, int productId);
 }

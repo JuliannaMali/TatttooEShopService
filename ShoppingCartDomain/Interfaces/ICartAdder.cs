@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ShoppingCartDomain.Models;
 
 namespace ShoppingCartDomain.Interfaces;
-
 public interface ICartAdder
 {
+    void AddProductToCart(int cartId, Product product);
 }

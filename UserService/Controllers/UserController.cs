@@ -19,8 +19,8 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    //[Authorize(Policy ="AdminOnly")]
-    //[Authorize(Policy ="EmployeeOnly")]
+    [Authorize(Policy ="AdminOnly")]
+    [Authorize(Policy ="EmployeeOnly")]
     public ActionResult<UserResponseDTO> GetUserData()
     {
         int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
