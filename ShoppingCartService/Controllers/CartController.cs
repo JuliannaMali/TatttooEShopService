@@ -26,29 +26,60 @@ public class CartController : ControllerBase
         _kafkaProducer = kafkaProducer;
     }
 
-    [HttpPost("add-product")]
-    public async Task<IActionResult> AddProductToCart([FromBody] AddProductToCartCommand command)
+    //[HttpPost("add-product")]
+    //public async Task<IActionResult> AddProductToCart([FromBody] AddProductToCartCommand command)
+    //{
+    //    await _mediator.Send(command);
+    //    return Ok();
+    //}
+
+    [Authorize(Policy = "LoggedIn")]
+    [HttpPost("AddProduct{productId}")]
+    public async Task<IActionResult> AddProductToCart(int productId)
     {
+        var cartId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+        var command = new AddProductToCartCommand
+        {
+            CartId = cartId,
+            ProductId = productId
+        };
         await _mediator.Send(command);
         return Ok();
     }
 
-    [HttpPost("remove-product")]
-    public async Task<IActionResult> RemoveProductFromCart([FromBody] RemoveProductFromCartCommand command)
+    [Authorize(Policy = "LoggedIn")]
+    [HttpPost("RemoveProduct{productId}")]
+    public async Task<IActionResult> RemoveProductToCart(int productId)
     {
+        var cartId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+        var command = new RemoveProductFromCartCommand
+        {
+            CartId = cartId,
+            ProductId = productId
+        };
         await _mediator.Send(command);
         return Ok();
     }
 
-    [HttpGet("{cartId}")]
-    public async Task<IActionResult> GetCart(int cartId)
+    //[HttpPost("remove-product")]
+    //public async Task<IActionResult> RemoveProductFromCart([FromBody] RemoveProductFromCartCommand command)
+    //{
+    //    await _mediator.Send(command);
+    //    return Ok();
+    //}
+
+    [Authorize(Policy = "LoggedIn")]
+    [HttpGet("GetLoggedUserCart")]
+    public async Task<IActionResult> GetCart()
     {
+        var cartId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
         var query = new GetCartQuery { CartId = cartId };
         var result = await _mediator.Send(query);
         return result == null ? NotFound() : Ok(result);
     }
 
-    [HttpGet]
+    [Authorize(Policy = "Managerial")]
+    [HttpGet("GetAllCarts")]
     public async Task<IActionResult> GetAllCarts()
     {
         var query = new GetAllCartsQuery();
@@ -56,7 +87,7 @@ public class CartController : ControllerBase
         return Ok(result);
     }
 
-    [Authorize]
+    [Authorize(Policy = "LoggedIn")]
     [HttpPost("checkout")]
     public async Task<IActionResult> Checkout()
     {

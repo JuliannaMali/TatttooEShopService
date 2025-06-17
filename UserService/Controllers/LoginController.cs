@@ -34,11 +34,4 @@ public class LoginController : ControllerBase
         }
     }
 
-    [HttpGet]
-    [Authorize]
-    [Authorize(Policy = "AdminOnly")]
-    public IActionResult AdminPage()
-    {
-        return Ok();
-    }
 }

@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using UserDomain.Models.DTO;
 using UserApplication.Services.User;
+using UserDomain.Models.DTO;
+using UserDomain.Models.Entities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,8 +20,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Policy ="AdminOnly")]
-    [Authorize(Policy ="EmployeeOnly")]
+    [Authorize(Policy = "Managerial")]
     public ActionResult<UserResponseDTO> GetUserData()
     {
         int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
@@ -36,6 +36,7 @@ public class UserController : ControllerBase
 
     }
 
+    [Authorize(Policy = "LoggedIn")]
     [HttpPost("AddClient")]
     public async Task<ActionResult> AddClient([FromBody] UserCreateDTO user)
     {
@@ -43,6 +44,7 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Policy = "Managerial")]
     [HttpPost("AddEmployee")]
     public async Task<ActionResult> AddEmployee([FromBody] UserCreateDTO user)
     {
@@ -50,6 +52,7 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Policy = "AdminOnly")]
     [HttpPost("AddAdmin")]
     public async Task<ActionResult> AddAdmin([FromBody] UserCreateDTO user)
     {
@@ -57,16 +60,20 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPut("update/{id}")]
-    public async Task<ActionResult> Update(int id, [FromBody] UserUpdateDTO user)
+    [Authorize(Policy = "LoggedIn")]
+    [HttpPut("Update")]
+    public async Task<ActionResult> Update([FromBody] UserUpdateDTO user)
     {
+        var id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
         var result = await _userService.Update(id, user);
         return Ok(result);
     }
 
-    [HttpDelete("delete/{id}")]
-    public async Task<ActionResult> Delete(int id)
+    [Authorize(Policy = "LoggedIn")]
+    [HttpDelete("Delete")]
+    public async Task<ActionResult> Delete()
     {
+        var id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
         var result = await _userService.Delete(id);
         return Ok(result);
     }

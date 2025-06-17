@@ -16,15 +16,20 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
 
+
+        //connection
         var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
         builder.Services.AddDbContext<DataContext>(options =>
             options.UseSqlServer(connectionString), ServiceLifetime.Transient);
+        //----
 
 
+
+        //DI
         builder.Services.AddScoped<IRepository, Repository>();
         builder.Services.AddScoped<IProductService, ProductService>();
-
-
+        builder.Services.AddScoped<ISeeder, Seeder>();
+        //----
 
 
 
@@ -33,6 +38,8 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
 
 
+
+        //bearer
         builder.Services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
@@ -46,26 +53,28 @@ public class Program
             });
 
             c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+              {
+                {
+                  new OpenApiSecurityScheme
+                  {
+                    Reference = new OpenApiReference
                       {
-                        {
-                          new OpenApiSecurityScheme
-                          {
-                            Reference = new OpenApiReference
-                              {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                              },
-                              Scheme = "oauth2",
-                              Name = "Bearer",
-                              In = ParameterLocation.Header,
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                      },
+                      Scheme = "oauth2",
+                      Name = "Bearer",
+                      In = ParameterLocation.Header,
 
-                            },
-                            new List<string>()
-                          }
-                        });
+                    },
+                    new List<string>()
+                  }
+                });
         });
+        //----
 
 
+        //rsa
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -73,11 +82,8 @@ public class Program
         })
         .AddJwtBearer(options =>
         {
-            string publicKeyPath = "/app/data/public.key";
-
-            using RSA rsa = RSA.Create();
-            rsa.ImportFromPem(File.ReadAllText(publicKeyPath));
-
+            var rsa = RSA.Create();
+            rsa.ImportFromPem(File.ReadAllText("/app/data/public.key"));
             var publicKey = new RsaSecurityKey(rsa);
 
             options.TokenValidationParameters = new TokenValidationParameters
@@ -91,26 +97,21 @@ public class Program
                 IssuerSigningKey = publicKey
             };
         });
+        //----
 
 
 
-        builder.Services.AddScoped<ISeeder, Seeder>();
-
-
+        //policy
         builder.Services.AddAuthorization(options =>
         {
-            options.AddPolicy("AdminOnly", policy =>
-                policy.RequireRole("Administrator"));
-            options.AddPolicy("EmployeeOnly", policy =>
-                policy.RequireRole("Employee"));
+            options.AddPolicy("Managerial", policy =>
+                policy.RequireRole("Administrator", "Employee"));
         });
+        //----
 
 
         var app = builder.Build();
 
-
-
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -119,12 +120,17 @@ public class Program
 
         app.UseHttpsRedirection();
 
+
+        //auth.use
         app.UseAuthentication();
         app.UseAuthorization();
+        //----
 
         app.MapControllers();
 
 
+
+        //seeder
         using (var scope = app.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<DataContext>();
@@ -132,6 +138,9 @@ public class Program
             var seeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
             await seeder.Seed();
         }
+        //----
+
+
 
         app.Run();
     }

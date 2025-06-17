@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Cryptography;
+using System.Text;
 using UserApplication.Producer;
 using UserApplication.Services.JWT;
 using UserApplication.Services.Login;
@@ -17,29 +18,31 @@ using UserDomain.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+//connection
 var connectionString = builder.Configuration.GetConnectionString("TattooDB");
 //var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 builder.Services.AddDbContext<UserDomain.Repository.DbContext>(options =>
     options.UseSqlServer(connectionString), ServiceLifetime.Transient);
+//-----
 
 
 
 
-
-
-
+//DI
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IUserService, UserApplication.Services.User.UserService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<ISeeder, Seeder>();
 builder.Services.AddScoped<IKafkaProducer, KafkaProducer>();
+//-----
 
 
-// JWT config
+
+//jwt
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 builder.Services.Configure<JwtSettings>(jwtSettings);
-
 
 builder.Services.AddAuthentication(options =>
 {
@@ -48,17 +51,11 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    string publicKeyPath = "/app/data/public.key";
-
-    using RSA rsa = RSA.Create();
-    rsa.ImportFromPem(File.ReadAllText(publicKeyPath));
-
+    var rsa = RSA.Create();
+    rsa.ImportFromPem(File.ReadAllText("/app/data/public.key"));
     var publicKey = new RsaSecurityKey(rsa);
 
-    var jwtSection = builder.Configuration.GetSection("Jwt");
-    var jwtConfig = jwtSection.Get<JwtSettings>();
-
-
+    var jwtConfig = jwtSettings.Get<JwtSettings>();
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -70,17 +67,23 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = publicKey
     };
 });
+//-----
 
+
+
+
+//auth
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy =>
         policy.RequireRole("Administrator"));
-    options.AddPolicy("EmployeeOnly", policy =>
-        policy.RequireRole("Employee"));
-
-
+    options.AddPolicy("Managerial", policy =>
+        policy.RequireRole("Administrator", "Employee"));
+    options.AddPolicy("LoggedIn", policy =>
+        policy.RequireRole("Administrator", "Employee", "Client"));
 });
 
+//-----
 
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -88,6 +91,10 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+
+
+//bearer
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
@@ -119,11 +126,14 @@ builder.Services.AddSwaggerGen(c =>
               }
             });
 });
+//-----
+
+
 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -139,6 +149,9 @@ app.UseAuthorization();
 app.MapControllers();
 
 
+
+
+//seeder
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<UserDomain.Repository.DbContext>();
@@ -146,5 +159,7 @@ using (var scope = app.Services.CreateScope())
     var seeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
     await seeder.Seed();
 }
+//-----
+
 
 app.Run();

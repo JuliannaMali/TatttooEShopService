@@ -12,16 +12,20 @@ using UserDomain.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+//connection
 var connectionString = builder.Configuration.GetConnectionString("TattooDB");
-//var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 builder.Services.AddDbContext<UserDomain.Repository.DbContext>(options =>
     options.UseSqlServer(connectionString), ServiceLifetime.Transient);
+//---
 
-// Add services to the container.
+
 builder.Services.AddControllers();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ShoppingCartApplication.Services.CartService).Assembly));
 
-// Register dependencies (DIP)
+
+
+//DI
 builder.Services.AddSingleton<ICartRepository, InMemoryCartRepository>();
 builder.Services.AddSingleton<ICartAdder, CartService>();
 builder.Services.AddSingleton<ICartRemover, CartService>();
@@ -32,9 +36,14 @@ builder.Services.AddHttpClient<IProductInfoService, ProductInfoService>(client =
 {
     client.BaseAddress = new Uri("http://tattooeshopservice:8081/");
 });
+//---
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+
+//bearer
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
@@ -48,26 +57,28 @@ builder.Services.AddSwaggerGen(c =>
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                  {
-                    {
-                      new OpenApiSecurityScheme
-                      {
-                        Reference = new OpenApiReference
-                          {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                          },
-                          Scheme = "oauth2",
-                          Name = "Bearer",
-                          In = ParameterLocation.Header,
+      {
+        {
+          new OpenApiSecurityScheme
+          {
+            Reference = new OpenApiReference
+              {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+              },
+              Scheme = "oauth2",
+              Name = "Bearer",
+              In = ParameterLocation.Header,
 
-                        },
-                        new List<string>()
-                      }
-                    });
+            },
+            new List<string>()
+          }
+        });
 });
+//---
 
 
+//rsa
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -75,13 +86,9 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    string publicKeyPath = "/app/data/public.key";
-
-    using RSA rsa = RSA.Create();
-    rsa.ImportFromPem(File.ReadAllText(publicKeyPath));
-
+    var rsa = RSA.Create();
+    rsa.ImportFromPem(File.ReadAllText("/app/data/public.key"));
     var publicKey = new RsaSecurityKey(rsa);
-
 
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -94,21 +101,29 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = publicKey
     };
 });
+//----
 
+
+//policy
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("ClientOnly", policy =>
+    options.AddPolicy("LoggedIn", policy =>
         policy.RequireRole("Client"));
+    options.AddPolicy("Managerial", policy =>
+        policy.RequireRole("Administrator","Employee"));
 });
+//--
 
 
-
+//auth
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
+//---
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
