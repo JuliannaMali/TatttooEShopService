@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Cryptography;
-using System.Text;
 using UserApplication.Producer;
 using UserApplication.Services.JWT;
 using UserApplication.Services.Login;

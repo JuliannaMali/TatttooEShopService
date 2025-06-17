@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using UserDomain.Models.DTO;
 using UserDomain.Repository;
 
@@ -29,8 +28,6 @@ public class UserService : IUserService
 
         return _mapper.Map<UserResponseDTO>(user);
     }
-
-
     public async Task<UserDomain.Models.Entities.User> AddClient(UserCreateDTO user)
     {
         var result = await _repository.AddClientAsync(user);
@@ -49,13 +46,6 @@ public class UserService : IUserService
 
     public async Task<UserDomain.Models.Entities.User> Update(int userId, UserUpdateDTO userDto)
     {
-        //var user = context.Users.Find(userId);
-        
-        //userDto = new UserUpdateDTO
-        //{
-        //    Email = user.Email,
-        //    PasswordHash = user.PasswordHash,
-        //};
         var result = await _repository.UpdateAsync(userId, userDto);
         return result;
     }

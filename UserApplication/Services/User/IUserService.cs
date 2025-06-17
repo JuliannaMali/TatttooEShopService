@@ -1,5 +1,4 @@
 ﻿using UserDomain.Models.DTO;
-using UserDomain.Models.Entities;
 
 namespace UserApplication.Services.User;
 

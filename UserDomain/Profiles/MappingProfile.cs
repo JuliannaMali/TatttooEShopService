@@ -1,5 +1,4 @@
-﻿using UserDomain.Models.Entities;
-using UserDomain.Models.DTO;
+﻿using UserDomain.Models.DTO;
 using AutoMapper;
 
 namespace UserDomain.Profiles;
@@ -14,6 +13,5 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
             .ForMember(dest => dest.LastLoginAt, opt => opt.MapFrom(src => src.LastLoginAt));
-
     }
 }
