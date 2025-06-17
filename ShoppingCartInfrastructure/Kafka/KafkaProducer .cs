@@ -1,6 +1,5 @@
 ﻿using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
-using ShoppingCartInfrastructure.Kafka;
 
 namespace ShoppingCartInfrastructure.Kafka;
 public class KafkaProducer : IKafkaProducer

@@ -4,7 +4,6 @@ using MediatR;
 using ShoppingCartDomain.Queries;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using UserDomain.Models.Entities;
 using ShoppingCartInfrastructure.Kafka;
 
 
@@ -25,13 +24,6 @@ public class CartController : ControllerBase
         _dbcontext = context;
         _kafkaProducer = kafkaProducer;
     }
-
-    //[HttpPost("add-product")]
-    //public async Task<IActionResult> AddProductToCart([FromBody] AddProductToCartCommand command)
-    //{
-    //    await _mediator.Send(command);
-    //    return Ok();
-    //}
 
     [Authorize(Policy = "LoggedIn")]
     [HttpPost("AddProduct{productId}")]
@@ -61,13 +53,6 @@ public class CartController : ControllerBase
         return Ok();
     }
 
-    //[HttpPost("remove-product")]
-    //public async Task<IActionResult> RemoveProductFromCart([FromBody] RemoveProductFromCartCommand command)
-    //{
-    //    await _mediator.Send(command);
-    //    return Ok();
-    //}
-
     [Authorize(Policy = "LoggedIn")]
     [HttpGet("GetLoggedUserCart")]
     public async Task<IActionResult> GetCart()
@@ -93,7 +78,7 @@ public class CartController : ControllerBase
     {
         var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
         var user = _dbcontext.Users.Find(userId);
-        var command = new CheckoutCommand { CartId = userId }; // zakładamy CartId = UserId
+        var command = new CheckoutCommand { CartId = userId };
 
         if (user == null)
             return NotFound("User not found");

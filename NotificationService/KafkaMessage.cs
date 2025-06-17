@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NotificationService;
+﻿namespace NotificationService;
 public class KafkaMessage
 {
     public long Offset { get; set; }

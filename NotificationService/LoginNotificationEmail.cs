@@ -1,10 +1,7 @@
-using System;
 using System.Net.Mail;
 using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using Azure.Storage.Queues.Models;
-using System.Threading.Tasks;
 
 namespace NotificationService;
 public class LoginNotificationEmail
