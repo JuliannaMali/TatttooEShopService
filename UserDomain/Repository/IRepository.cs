@@ -11,5 +11,4 @@ public interface IRepository
     Task<Models.Entities.User> UpdateAsync(int userId, UserUpdateDTO userDto);
 
     Task<Models.Entities.User> DeleteAsync(Models.Entities.User user);
-
 }
