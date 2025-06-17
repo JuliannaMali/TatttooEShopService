@@ -8,6 +8,7 @@ services:
         - db
     environment:
         - CONNECTION_STRING=Server=${DB_HOST};Database=${DB_ESHOP};User Id=${DB_USER};Password=${SA_PASSWORD};Encrypt=False;TrustServerCertificate=True;
+        - ASPNETCORE_URLS=http://+:5000
     ports:
         - "5000:5000"
 

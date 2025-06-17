@@ -34,7 +34,7 @@ builder.Services.AddSingleton<IKafkaProducer, KafkaProducer>();
 builder.Services.AddSingleton<IOrderRepository, InMemoryOrderRepository>();
 builder.Services.AddHttpClient<IProductInfoService, ProductInfoService>(client =>
 {
-    client.BaseAddress = new Uri("http://tattooeshopservice:8081/");
+    client.BaseAddress = new Uri("http://tattooeshopservice:5000/");
 });
 //---
 

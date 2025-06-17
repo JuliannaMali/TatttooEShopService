@@ -21,11 +21,11 @@ public class CheckoutNotificationEmail
         [KafkaTrigger("kafka:9092", "checkout-topic", ConsumerGroup = "function-consumer-group")]
         KafkaMessage kafkaEvent)
     {
-        _logger.LogInformation($"Odebrano wiadomoœæ z checkout-topic: {kafkaEvent.Value}");
+        _logger.LogInformation($"Message received from checkout-topic: {kafkaEvent.Value}");
 
-        var email = "test@odbiorca.pl";
+        var email = "test@receiver.pl";
 
-        await SendEmailAsync("Twoje zamówienie", kafkaEvent.Value, email);
+        await SendEmailAsync("Order:", kafkaEvent.Value, email);
     }
 
     static async Task SendEmailAsync(string subject, string message, string toEmail)
@@ -42,7 +42,7 @@ public class CheckoutNotificationEmail
                     Environment.GetEnvironmentVariable("smtpPassword"))
             };
 
-            var mailMessage = new MailMessage("test@balsamski.pl", toEmail, subject, message)
+            var mailMessage = new MailMessage("test@gmail.pl", toEmail, subject, message)
             {
                 IsBodyHtml = false
             };
@@ -51,7 +51,7 @@ public class CheckoutNotificationEmail
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"B³¹d wysy³ania e-maila: {ex.Message}");
+            Console.WriteLine($"Error in sending email: {ex.Message}");
         }
     }
 }
